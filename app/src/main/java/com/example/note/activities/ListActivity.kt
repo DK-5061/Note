@@ -32,16 +32,17 @@ class ListActivity : AppCompatActivity() {
 
         val notes = getNotes()
 
-        adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, notes ?: emptyList())
+        adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+            notes?.map { n -> n?.title } ?: emptyList())
 
         val list: ListView = findViewById(R.id.listView1)
         list.adapter = adapter
     }
 
-    private fun getNotes(): List<String?>? {
+    private fun getNotes(): List<Note?>? {
         val gson = Gson()
         val json = sharedPreferences.getString(KEY_EDITOR, KEY_EDITOR)
-        val type: Type = object : TypeToken<ArrayList<String?>?>() {}.type
+        val type: Type = object : TypeToken<List<Note?>?>() {}.type
         return gson.fromJson(json, type)
     }
 

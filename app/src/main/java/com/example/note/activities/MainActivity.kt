@@ -33,11 +33,14 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences(KEY_SHARED_PREFERENCES, MODE_PRIVATE)
 
+        val titleEditText = findViewById<View>(R.id.titleID) as EditText
         val noteEditText = findViewById<View>(R.id.noteID) as EditText
 
-        val notes: ArrayList<String> = ArrayList()
+        val note = Note(titleEditText.text.toString(), noteEditText.text.toString())
+
+        val notes: ArrayList<Note> = ArrayList()
         notes.addAll(getNotes())
-        notes.add(noteEditText.text.toString())
+        notes.add(note)
         saveNotes(notes)
 
         val label = findViewById<View>(R.id.labelID) as TextView
@@ -47,14 +50,14 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun getNotes(): Collection<String> {
+    private fun getNotes(): List<Note> {
         val gson = Gson()
         val json = sharedPreferences.getString(KEY_EDITOR, KEY_EDITOR)
-        val type: Type = object : TypeToken<ArrayList<String?>?>() {}.type
+        val type: Type = object : TypeToken<List<Note?>?>() {}.type
         return gson.fromJson(json, type)
     }
 
-    private fun saveNotes(list: ArrayList<String>) {
+    private fun saveNotes(list: List<Note>) {
         val editor: SharedPreferences.Editor = sharedPreferences.edit()
         val gson = Gson()
         val json = gson.toJson(list)
