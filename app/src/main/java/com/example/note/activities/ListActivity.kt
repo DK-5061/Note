@@ -3,7 +3,6 @@ package com.example.note.activities
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.note.R
@@ -21,8 +20,6 @@ class ListActivity : AppCompatActivity() {
         const val KEY_SHARED_PREFERENCES = "prefID"
     }
 
-    private var adapter: ArrayAdapter<String>? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -32,14 +29,13 @@ class ListActivity : AppCompatActivity() {
 
         val notes = getNotes()
 
-        adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-            notes?.map { n -> n?.title } ?: emptyList())
+        val adapter = NoteAdapter(this, notes)
 
-        val list: ListView = findViewById(R.id.listView1)
+        val list: ListView = findViewById(R.id.listView)
         list.adapter = adapter
     }
 
-    private fun getNotes(): List<Note?>? {
+    private fun getNotes(): List<Note> {
         val gson = Gson()
         val json = sharedPreferences.getString(KEY_EDITOR, KEY_EDITOR)
         val type: Type = object : TypeToken<List<Note?>?>() {}.type
